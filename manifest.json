@@ -3,7 +3,7 @@
   "short_name": "棚検索",
   "start_url": "/medicine_cabinet4/index.html",
   "display": "standalone",
-  "scope": "/medicine_cabinet4/"
+  "scope": "/medicine_cabinet4/",
   "background_color": "#ffffff",
   "theme_color": "#4CAF50",
  "icons": [

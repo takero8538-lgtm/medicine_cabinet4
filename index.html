@@ -42,13 +42,8 @@
       background-color: #eee;
     }
   </style>
-  <link rel="manifest" href="/medicine_cabinet4/manifest.json">
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="default">
-  <link rel="apple-touch-icon" href="/medicine_cabinet4/icon_192.png">
-  <meta name="theme-color" content="#FFC0CB">
+  <link rel="manifest" href="manifest.json">
 
-  
 </head>
 <body>
   <h2>薬品棚検索</h2>
@@ -58,6 +53,22 @@
   <button id="selectFileBtn">Excelファイルを選択</button>
   <span id="fileNameDisplay">未選択</span>
   <br><br>
+
+  <button id="historyBtn">検索履歴</button>
+  <br><br>
+
+
+  <div id="historyPanel" style="
+    display:none;
+    max-height:100px;   /* ← 一度に見える高さを指定 */
+    overflow-y:auto;    /* ← 長くなったらスクロール */
+    border:1px solid #ccc;
+    padding:10px;
+    margin-top:10px;
+  ">
+    <ul id="historyList"></ul>
+  </div>
+
 
   <label for="medicineInput">薬品名：</label><br>
   <input type="text" id="medicineInput" placeholder="薬品名を入力"><br>
@@ -960,6 +971,8 @@
         try {
           localStorage.setItem("lastSelectedMedicineName", item.name);
         } catch {}
+        saveSearchHistory(item.name);
+
       };
       suggestList.appendChild(li);
     });
@@ -973,14 +986,53 @@ document.getElementById("selectFileBtn").addEventListener("click", () => {
 // --- サービスワーカー登録 ---
 if ("serviceWorker" in navigator) {
   window.addEventListener("load", () => {
-    navigator.serviceWorker.register("/medicine_cabinet4/service-worker.js")
+    navigator.serviceWorker.register("/medicine-cabinet3/service-worker.js")
       .then(reg => console.log("Service Worker registered:", reg.scope))
       .catch(err => console.error("Service Worker registration failed:", err));
   });
+}
+
+function renderSearchHistory() {
+  const history = JSON.parse(localStorage.getItem("searchHistory") || "[]");
+  const list = document.getElementById("historyList");
+  list.innerHTML = "";
+
+  // 全件を新しい順に表示
+  const reversed = history.slice().reverse();
+
+  reversed.forEach(item => {
+    const li = document.createElement("li");
+    const time = new Date(item.timestamp).toLocaleString("ja-JP", {
+      hour: "2-digit",
+      minute: "2-digit",
+      month: "2-digit",
+      day: "2-digit"
+    });
+    li.textContent = `${item.name}（${time}）`;
+
+
+    list.appendChild(li);
+  });
+}
+
+document.getElementById("historyBtn").addEventListener("click", () => {
+  const panel = document.getElementById("historyPanel");
+  panel.style.display = (panel.style.display === "none") ? "block" : "none";
+  renderSearchHistory();
+});
+
+function saveSearchHistory(medicineName) {
+  const history = JSON.parse(localStorage.getItem("searchHistory") || "[]");
+
+  history.push({
+    name: medicineName,
+    timestamp: new Date().toISOString()
+  });
+
+  localStorage.setItem("searchHistory", JSON.stringify(history));
 }
 
 
 </script>
 </body>
 </html>
-

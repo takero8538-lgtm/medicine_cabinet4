@@ -4,8 +4,8 @@
   <meta charset="UTF-8">
   <title>薬品棚検索</title>
   <style>
-      html {
-    font-size: 20px;
+    html {
+    font-size: 24px;
     }
     body { font-family: sans-serif; padding: 20px; }
     #map td {
@@ -24,7 +24,8 @@
 
     #medicineInput {
       width: 500px;
-      font-size: 20px;
+      height: 30px;
+      font-size: 24px;
     }
 
     #suggestList {
@@ -44,6 +45,14 @@
     #suggestList li:hover {
       background-color: #eee;
     }
+    #selectFileBtn {
+    font-size: 24px;
+    padding: 10px 20px;
+  　}
+    #historyBtn {
+    font-size: 24px;
+    padding: 10px 20px;
+  　}
   </style>
   <link rel="manifest" href="manifest.json">
 
@@ -989,7 +998,7 @@ document.getElementById("selectFileBtn").addEventListener("click", () => {
 // --- サービスワーカー登録 ---
 if ("serviceWorker" in navigator) {
   window.addEventListener("load", () => {
-    navigator.serviceWorker.register("/medicine-cabinet4/service-worker.js")
+    navigator.serviceWorker.register("/medicine-cabinet3/service-worker.js")
       .then(reg => console.log("Service Worker registered:", reg.scope))
       .catch(err => console.error("Service Worker registration failed:", err));
   });
